@@ -12,26 +12,40 @@ except Exception:
   print('Pxtone voice is not started')
   sys.exit(1)
 
+#
+def request(inType):
+  if inType == 'ps': env.piano(12,120)
+  if inType == 'pm': env.piano(25,120)
+  if inType == 'pl': env.piano(50,120)
+
+  if inType == 'bs': env.piano(12,128)
+  if inType == 'bm': env.piano(25,128)
+  if inType == 'bl': env.piano(50,128)
+
+  if inType == 'fs': env.flute(12,128)
+  if inType == 'fm': env.flute(25,128)
+  if inType == 'fl': env.flute(50,128)
+
+  if inType == 'fo-o': env.follin_organ(8)
+  if inType == 'fo-ps': env.follin_piano(8,12,128)
+  if inType == 'fo-pm': env.follin_piano(8,25,128)
+  if inType == 'fo-pl': env.follin_piano(8,50,128)
+
+  if inType == 'ofo-o': env.follin_organ(16)
+  if inType == 'ofo-ps': env.follin_piano(16,12,128)
+  if inType == 'ofo-pm': env.follin_piano(16,25,128)
+  if inType == 'ofo-pl': env.follin_piano(16,50,128)
+
 msgText = ('(◇Example: "pm" = Piano-Middle)\n\n'
-           '■Envelope Type:\n'
-           '"p" = piano, "f" = flute, \n\n'
            '■Envelope Time:\n'
            '"s" = short, "m" = middle, "l" = long\n\n'
-           '■Special:(used: ch1,2)\n'
-           '"fo-o" = Follin-Organ, "fo-p[s,m,l]" = Follin-piano'
+           '■Envelope Type:\n'
+           '"p[s,m,l]"=piano, "b[s,m,l]"=bell(0 Sustain piano), "f[s,m,l]"=flute, \n\n'
+           '★Special:(used: ch1,2)\n'
+           '◆Follin Tone([o]=)\n'
+           '"[o]fo-o" = Follin-Organ, "[o]fo-p[s,m,l]" = Follin-piano'
            )
 
 inType = pag.prompt(text=msgText, title='envtype select', default='')
 
-if inType == 'ps': env.piano(12,128)
-if inType == 'pm': env.piano(25,128)
-if inType == 'pl': env.piano(50,128)
-
-if inType == 'fs': env.flute(12,128)
-if inType == 'fm': env.flute(25,128)
-if inType == 'fl': env.flute(50,128)
-
-if inType == 'fo-o': env.follin_organ()
-if inType == 'fo-ps': env.follin_piano(12,128)
-if inType == 'fo-pm': env.follin_piano(25,128)
-if inType == 'fo-pl': env.follin_piano(50,128)
+request(inType)
