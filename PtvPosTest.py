@@ -22,12 +22,18 @@ pos_test(posName,0,0)
 
 # posName = "エディタ基準点_OK"
 # pos_test(posName,32,179)
-
 # posName = "エディタ > 戻るボタン_OK"
 # pos_test(posName,300,160)
 
 # posName = "wavエディタ > [32,16]"
-# pos_test(posName,64,195) # x = 32+32, y = 179+ 16
+# pos_test(posName,64,195) # x = 32+32, y=179+16
+
+posName = "envエディタ > x0.1" # x=32+24, y=179-17
+pos_test(posName,56,164)
+posName = "envエディタ > x0.5"
+pos_test(posName,103,164)
+posName = "envエディタ > x1.0"
+pos_test(posName,150,164)
 
 # posName = "top > wavエディタ1ボタン"
 # pos_test(posName,100,140)
