@@ -189,16 +189,31 @@ def tremolo_piano(x, y, type):
   ptv = pgw.getWindowsWithTitle('ピストンボイス')[0]
   ptv.activate()
 
-  #エディタのトップ画面へ遷移
-  gamen_move(300,160)
-  #エディタ1のEnvelope画面へ遷移
-  gamen_move(282,140)
+  # #エディタのトップ画面へ遷移
+  # gamen_move(300,160)
+  # #エディタ1のEnvelope画面へ遷移
+  # gamen_move(282,140)
 
   pag.PAUSE = 1/4
   tremolo_piano_parts(x, type, 1)
 
 def stripe_piano(x, y, type):
-  x=x
+  ptv = pgw.getWindowsWithTitle('ピストンボイス')[0]
+  ptv.activate()
+
+  #エディタのトップ画面へ遷移
+  gamen_move(300,160)
+  #エディタ1のEnvelope画面へ遷移
+  gamen_move(282,140)
+  pag.PAUSE = 1/4
+  tremolo_piano_parts(x, type, 1)
+
+  #エディタのトップ画面へ遷移
+  gamen_move(300,160)
+  #エディタ2のEnvelope画面へ遷移
+  gamen_move(282,284)
+  pag.PAUSE = 1/4
+  tremolo_piano_parts(x, type, 2)
 
 #---------------------------------------
 def tremolo_piano_parts(x, type, mode):
@@ -206,28 +221,34 @@ def tremolo_piano_parts(x, type, mode):
   pause_buffer = 1/4
   click_buffer = 1/60
   yRange_half = 240
-  move_time = 12/60
+  move_time = 10/60
 
   frame = x
   y_top = 256  #エディタ最大高さ
+  y_target = 256  #点を打つ高さの基準
 
   pos_xy_zero()
   #相方の編集の場合、消音状態かつx分ずらしてから開始
   if mode == 2:
     pag.move(xOffset=0, yOffset=y_top/2)
-    pag.click(interval=pause_buffer)
-    pag.rightClick(interval=pause_buffer)
+    pag.click() #x0,y128
     pag.PAUSE = pause_buffer
-
-    pag.move(xOffset=frame, yOffset=-yRange_half)
+    pag.move(xOffset=frame, yOffset=0)
+    pag.PAUSE = pause_buffer
+    pag.click() #x=frame,y128
+    pag.PAUSE = pause_buffer
+    pag.move(xOffset=-frame, yOffset=0)
+    pag.rightClick() #x=0,y128 #開始点削除
+    pag.move(xOffset=frame, yOffset=0)
+    pag.PAUSE = pause_buffer
     pag.drag(0, yRange_half, move_time, button='left')
     pag.PAUSE = pause_buffer
-
-    pag.move(xOffset=1, yOffset=-yRange_half)
-    pag.drag(0, -yRange_half, move_time, button='left')
+    pag.move(xOffset=0, yOffset=-yRange_half)
     pag.PAUSE = pause_buffer
-    #TODO 開始点(本当に最大値から始めて良いのかは要考慮)
-    pag.move(xOffset=0, yOffset=-yRange_half-y_top/2)
+    pag.move(xOffset=1, yOffset=-(y_top/2))
+    pag.PAUSE = pause_buffer
+    pag.click() #開始点クリック
+    pag.PAUSE = pause_buffer
 
   else: #mode == 1 (一番最初の点)
     pag.move(xOffset=0, yOffset=y_top/2)
@@ -237,9 +258,7 @@ def tremolo_piano_parts(x, type, mode):
 
   start_value = 6 #何回処理するか
   i = start_value #何回残っているか
-  y_target = 256  #点を打つ高さの基準
 
-  pag.PAUSE = 1 #debug
 
   while i >= 1:
     if i != start_value: #1回目だった場合、セットアップで値を決定しているのでスキップ
@@ -250,26 +269,31 @@ def tremolo_piano_parts(x, type, mode):
       pag.click()
       pag.PAUSE = click_buffer
 
-    # pag.PAUSE = 2 #debug
-    #2(#1と同じyに点を打つ。最後はy_topに戻る)
-    pag.PAUSE = click_buffer
-    pag.move(xOffset=frame, yOffset=0)
-    pag.click()
-    pag.PAUSE = click_buffer
-    if i!=start_value:
-      pag.move(xOffset=0, yOffset=-(y_top-y_target))
-
-    y_target = y_target/2
-
-    # pag.PAUSE = 2 #debug
-    #3
-    if type=="saw":
-      pag.move(xOffset=x/2, yOffset=(y_target/4*3))
+    #2
+    if type=="saw": #最後はy_topに戻り、#2開始点からframe分x移動する
+      pag.move(xOffset=0, yOffset=-(y_top-y_target))  #y_topへ戻る
+      pag.move(xOffset=frame, yOffset=(y_top-(y_target/4)))
       pag.PAUSE = click_buffer
       pag.click()
       pag.PAUSE = click_buffer
-      pag.move(xOffset=-x/2, yOffset=-(y_target/4*3))
-    else : #type=="square"
+      pag.move(xOffset=0, yOffset=-(y_top-(y_target/4)))
+      y_target = y_target/2
+    else: #type == square(#1と同じyに点を打つ。最後はy_topに戻る)
+      pag.PAUSE = click_buffer
+      pag.move(xOffset=frame, yOffset=0)
+      pag.PAUSE = click_buffer
+      pag.click()
+      pag.PAUSE = click_buffer
+      if i!=start_value: #2回目以降はy_topではないはずなので補正
+        pag.move(xOffset=0, yOffset=-(y_top-y_target))
+      y_target = y_target/2
+
+    # pag.PAUSE = 2 #debug
+
+    #3
+    if type=="saw":
+      pass #なにもしない
+    else: #type==square
       pag.move(xOffset=1, yOffset=(y_top/2)-16)
       pag.drag(0, yRange_half, move_time, button='left')
       pag.PAUSE = pause_buffer
@@ -291,8 +315,7 @@ def tremolo_piano_parts(x, type, mode):
     #loop last
     i-=1
 
-
-
+  pos_xy_zero()
 
 #-TODO----------------------------------
 def tremolo_flute_parts(x, type, mode):

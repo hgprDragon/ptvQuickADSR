@@ -67,8 +67,16 @@ msgText = ('(◇Example: "pm" = Piano-Middle)\n\n'
            '"p[s,m,l]"=piano, "b[s,m,l]"=bell(0 Sustain piano), "f[s,m,l]"=flute, \n\n'
 
            '★Special:(used: ch1,2)\n'
-           '◆Follin Tone([o]=)\n'
-           '"[o]fo-o" = Follin-Organ, "[o]fo-p[s,m,l]" = Follin-piano'
+           '◆Follin Tone([o]-> 1frame = 1/60sec, []none = 1/120sec)\n'
+           '"[o]fo-o" = Follin-Organ, "[o]fo-p[s,m,l]" = Follin-piano, \n'
+
+           '◆Tremolo Piano([int i] == msec)\n'
+           '"tres[8,16,32]"=Echo Piano(square Envelope)\n'
+           '"trew[8,16,32]"=Echo Piano(saw Envelope)\n'
+
+           '◆Stripe Piano([o]=)\n'
+           '"stps[8,16,32]"=Stripe Piano(square Note)\n'
+           '"stpw[8,16,32]"=Stripe Piano(saw Note)\n'
            )
 
 inType = pag.prompt(text=msgText, title='envtype select', default='')
